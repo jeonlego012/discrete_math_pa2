@@ -49,11 +49,10 @@
             y: p1.y + Math.sin(angle - Math.PI / 3) * unit
         }
          if (limit > 0) {
-        	// Decrease limit each time it's called
-            koch(a, p1, limit - 1)
-            koch(p1, p2, limit - 1)
-            koch(p2, p3, limit - 1)
-            koch(p3, b, limit - 1)
+            snow(a, p1, limit - 1)
+            snow(p1, p2, limit - 1)
+            snow(p2, p3, limit - 1)
+            snow(p3, b, limit - 1)
         } else {
             context.beginPath()
             context.moveTo(a.x, a.y)
@@ -64,9 +63,9 @@
             context.stroke()
         }
     }
-    koch(startingPoints.p1, startingPoints.p2)
-    koch(startingPoints.p2, startingPoints.p3)
-    koch(startingPoints.p3, startingPoints.p1)
+    snow(startingPoints.p1, startingPoints.p2)
+    snow(startingPoints.p2, startingPoints.p3)
+    snow(startingPoints.p3, startingPoints.p1)
 
  })()
 </script>
