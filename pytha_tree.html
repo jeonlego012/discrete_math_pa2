@@ -1,76 +1,52 @@
 <html>
 <body>
-    
-<input type="text" id="depthLimit" value="">
+<input type="text" id="depth" value="">
 <button onclick="doDraw()">Draw</button>
 <button onclick="doClear()">Clear</button>
 <br>
 <canvas id="canvas" width="600" height="500"></canvas>
-    <script>
-        'use strict';
-        var canvas = document.querySelector('canvas');
-        canvas.width = 640;
-        canvas.height = 640;
- 
-        var g = canvas.getContext('2d');
- 
-        //var depthLimit = 8; //삼각형 개수
-        var hue = 1.0;
- 
-        function drawTree(x1, y1, x2, y2, depth) {
-            if (depth == depthLimit)
-                return;
-            var dx = x2 - x1;
-            var dy = y1 - y2;
- 
-            var x3 = x2 - dy;
-            var y3 = y2 - dx;
-            var x4 = x1 - dy;
-            var y4 = y1 - dx;
-            var x5 = x4 + 0.7 * (dx - dy);
-            var y5 = y4 - 0.3 * (dx + dy);
- 
-            g.beginPath();
-            g.moveTo(x1, y1);
-            g.lineTo(x2, y2);
-            g.lineTo(x3, y3);
-            g.lineTo(x4, y4);
-            g.closePath();
- 
+
+<script type="text/javascript">
+    var elem = document.getElementById('canvas');
+    var context = elem.getContext('2d');
+    context.fillStyle = '#000';
+    context.lineWidth = 1;
+    var deg_to_rad = Math.PI / 180.0;
+    
+    function drawRect(x1, y1, length, angle){
+        context.translate(x1,y1);
+        context.rotate(angle*deg_to_rad);
+        context.translate(-(x1),-(y1));
+        context.rect(x1, y1, length, length); //길이 = 100
+    }
+   function drawTree(x1, y1, length, angle, depth) {
+        if(depth!=0){
             
-            g.strokeStyle = "Black";
-            g.stroke();
- 
-            g.beginPath();
-            g.moveTo(x3, y3);
-            g.lineTo(x4, y4);
-            g.lineTo(x5, y5);
-            g.closePath();
- 
-            
-            g.strokeStyle = "Black";
-            g.stroke();
- 
-            drawTree(x4, y4, x5, y5, depth + 1);
-            drawTree(x5, y5, x3, y3, depth + 1);
+            drawRect(x1, y1, length, angle);
+            var x3 = x1 - length*Math.cos(30*deg_to_rad)*Math.sin(30*deg_to_rad);
+            var y3 = y1 - length*Math.cos(30*deg_to_rad)*Math.cos(30*deg_to_rad);
+            var x4 = x1 + (length*Math.cos(30*deg_to_rad)+length*Math.sin(30*deg_to_rad))*Math.cos(30*deg_to_rad);
+            var y4 = y1 - (length*Math.cos(30*deg_to_rad)+length*Math.sin(30*deg_to_rad))*Math.sin(30*deg_to_rad);
+            var ll = length*Math.cos(30*deg_to_rad);
+            var rl = length*Math.sin(30*deg_to_rad);
+            drawTree(x3, y3, ll, -30, depth-1);
+            context.translate(x4,y4);
+            drawTree(x4, y4, rl, 60, depth-1);
         }
- 
-       
-        function doDraw() {
-            var depth = parseInt(document.getElementById("depthLimit").value);
-            g.clearRect(0, 0, canvas.width, canvas.height);
-            drawTree(275, 500, 375, 500, depth);
-        }
-        var depth = parseInt(document.getElementById("depthLimit").value) ;
+        
+    }
+    
+    function doDraw() {
+        var depth = parseInt(document.getElementById("depth").value);
         context.beginPath();
-        drawTree(300, 500, -90, depth);
-         context.closePath();
-         context.stroke();
-         function doClear() {
-            context.clearRect(0, 0, canvas.width, canvas.height) ;
-        }
-    </script>
+        drawTree(300, 300, 100, 0, depth);
+        context.closePath();
+        context.stroke();
+    }
+    function doClear() {
+        context.clearRect(0, 0, canvas.width, canvas.height) ;
+    }
+</script>
  
 </body>
- 
 </html>
